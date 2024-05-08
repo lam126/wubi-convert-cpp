@@ -21,6 +21,8 @@
      g++ -g -o main.exe .\main.cpp
 
 ## 函数说明
+     vector<string> single_to_wubi(string han);
+     // 查字典,将单个汉字转成五笔编码,返回其所有编码
      vector<vector<string>> convert_multi(string input);
      // 输入字符串转换成五笔编码,多种转换方式
      string convert(string input);
