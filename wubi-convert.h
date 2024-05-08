@@ -12,12 +12,13 @@ private:
   // 按utf8编码分词
   uint16_t utf8_to_unicode(const std::string &utf8_str);
   // 转换utf8编码为unicode
-  vector<string> single_to_wubi(string han);
-  // 查字典,将单个汉字转成五笔编码
+
   vector<string> char_in_dict(string input);
   // 将字符串中在五笔字典中的汉字提取出来
 public:
   // WubiConvert();
+  vector<string> single_to_wubi(string han);
+  // 查字典,将单个汉字转成五笔编码
   vector<vector<string>> convert_multi(string input);
   // 输入字符串转换成五笔编码,多种转换方式
   string convert(string input);
