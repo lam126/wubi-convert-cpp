@@ -135,6 +135,7 @@ vector<vector<string>> WubiConvert::convert_multi(string input) {
 
 string WubiConvert::convert(string input) {
   string result = "";
+  cout << "input: " << input << endl;
   vector<string> words = char_in_dict(input);
   int len_words = words.size();
 

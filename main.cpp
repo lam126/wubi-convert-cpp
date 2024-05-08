@@ -1,13 +1,11 @@
 #include "wubi-convert.h"
-#include <iomanip> // For std::setw and std::setfill
 #include <iostream>
-#include <regex>
 #include <string>
 
 using namespace std;
 
 int main() {
-  system("chcp 65001");
+  //system("chcp 65001");
 
   WubiConvert wubi; // 实例化 WubiConvert 对象
   string inputText = "你好，世界！";
@@ -20,14 +18,14 @@ int main() {
     for (auto &wubi_text : text) {
       cout << wubi_text << " ";
     }
-    cout << " | ";
+    cout << " , ";
   }
   cout << endl;
 
   // 调用 convert 函数转换文本
   cout << "调用 convert 函数转换文本:" << endl;
   string convert_text = wubi.convert(inputText);
-  cout << "转换后的文本：" << convert_text << endl;
+  cout << convert_text << endl;
 
   // 调用 phrase_segment 函数分词
   cout << "调用 phrase_segment 函数分词:" << endl;
