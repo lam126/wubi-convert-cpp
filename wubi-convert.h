@@ -6,17 +6,20 @@
 
 using namespace std;
 
+extern void load_wubi_dict(const string &filename);
+extern unordered_map<string, string> wubi_dict;
+
 class WubiConvert {
 private:
   vector<string> utf8_split(const string &str);
   // 按utf8编码分词
-  uint16_t utf8_to_unicode(const std::string &utf8_str);
-  // 转换utf8编码为unicode
-
   vector<string> char_in_dict(string input);
   // 将字符串中在五笔字典中的汉字提取出来
 public:
   // WubiConvert();
+  explicit WubiConvert(const string &filepath);
+  uint32_t utf8_to_unicode(const std::string &utf8_str);
+  // 转换utf8编码为unicode
   vector<string> single_to_wubi(string han);
   // 查字典,将单个汉字转成五笔编码
   vector<vector<string>> convert_multi(string input);
@@ -27,26 +30,31 @@ public:
   // 输入字符串分词
 };
 
-uint16_t WubiConvert::utf8_to_unicode(const std::string &utf8_str) {
+WubiConvert::WubiConvert(const string &filepath) {
+  // 获取当前程序路径
+  load_wubi_dict(filepath);
+}
+
+uint32_t WubiConvert::utf8_to_unicode(const std::string &utf8_str) {
   if (utf8_str.empty()) {
     return 0;
   }
-  uint16_t unicode = 0;
+  uint32_t unicode = 0;
   int len = utf8_str.length();
   if (len == 1) {
-    unicode = static_cast<uint16_t>(utf8_str[0]);
+    unicode = static_cast<uint32_t>(utf8_str[0]);
   } else if (len == 2) {
-    unicode = (static_cast<uint16_t>(utf8_str[0]) & 0x1F) << 6;
-    unicode |= (static_cast<uint16_t>(utf8_str[1]) & 0x3F);
+    unicode = (static_cast<uint32_t>(utf8_str[0]) & 0x1F) << 6;
+    unicode |= (static_cast<uint32_t>(utf8_str[1]) & 0x3F);
   } else if (len == 3) {
-    unicode = (static_cast<uint16_t>(utf8_str[0]) & 0x0F) << 12;
-    unicode |= (static_cast<uint16_t>(utf8_str[1]) & 0x3F) << 6;
-    unicode |= (static_cast<uint16_t>(utf8_str[2]) & 0x3F);
+    unicode = (static_cast<uint32_t>(utf8_str[0]) & 0x0F) << 12;
+    unicode |= (static_cast<uint32_t>(utf8_str[1]) & 0x3F) << 6;
+    unicode |= (static_cast<uint32_t>(utf8_str[2]) & 0x3F);
   } else if (len == 4) { // 四字节UTF-8字符
-    unicode = (static_cast<uint16_t>(utf8_str[0]) & 0x07) << 18;
-    unicode |= (static_cast<uint16_t>(utf8_str[1]) & 0x3F) << 12;
-    unicode |= (static_cast<uint16_t>(utf8_str[2]) & 0x3F) << 6;
-    unicode |= (static_cast<uint16_t>(utf8_str[3]) & 0x3F);
+    unicode = (static_cast<uint32_t>(utf8_str[0]) & 0x07) << 18;
+    unicode |= (static_cast<uint32_t>(utf8_str[1]) & 0x3F) << 12;
+    unicode |= (static_cast<uint32_t>(utf8_str[2]) & 0x3F) << 6;
+    unicode |= (static_cast<uint32_t>(utf8_str[3]) & 0x3F);
   }
   return unicode;
 }
@@ -80,7 +88,7 @@ vector<string> WubiConvert::utf8_split(const string &str) {
 
 vector<string> WubiConvert::single_to_wubi(string han) {
   vector<string> result;
-  uint16_t han_unicode = utf8_to_unicode(han);
+  uint32_t han_unicode = utf8_to_unicode(han);
   std::stringstream ss;
   ss << "0x" << std::hex // 设置流为 16 进制
      << han_unicode;
@@ -88,7 +96,7 @@ vector<string> WubiConvert::single_to_wubi(string han) {
   if (wubi_dict.find(ss.str()) != wubi_dict.end()) {
     auto it = wubi_dict.find(ss.str());
     string wubi_code = (*it).second;
-    //分割字符串中的,符号
+    // 分割字符串中的,符号
     string token = "";
     for (char ch : wubi_code) {
       if (ch == ',') {
@@ -104,6 +112,7 @@ vector<string> WubiConvert::single_to_wubi(string han) {
       result.push_back(token); // 添加最后一个子串
     }
   } else {
+    // std::cerr << "未找到对应五笔编码:" << han << endl;
     result.push_back(han); // 未找到对应五笔编码，返回原字符}
   }
   return result;
@@ -114,7 +123,7 @@ vector<string> WubiConvert::char_in_dict(string input) {
   vector<string> words = utf8_split(input);
 
   for (string han : words) {
-    uint16_t han_unicode = utf8_to_unicode(han);
+    uint32_t han_unicode = utf8_to_unicode(han);
     std::stringstream ss;
     ss << "0x" << std::hex << han_unicode;
     if (wubi_dict.find(ss.str()) != wubi_dict.end()) {

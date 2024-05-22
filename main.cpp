@@ -7,7 +7,7 @@ using namespace std;
 int main() {
   //system("chcp 65001");
 
-  WubiConvert wubi; // 实例化 WubiConvert 对象
+  WubiConvert wubi("D:\\MyFiles\\VScode\\C++\\wubiTool\\wubi-convert-cpp\\wubi86.dict.txt"); // 实例化 WubiConvert 对象
   string inputText = "你好，世界！";
   cout << "输入的文本：" << inputText << endl;
 
