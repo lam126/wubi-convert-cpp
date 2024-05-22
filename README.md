@@ -2,8 +2,8 @@
 =============================
 
    
-将汉字转为五笔码。现只支持 86 版编码。
-如需其它编码，请自行替换字典文件`wubi_dict.h`。
+将汉字转为五笔码。使用 86 版编码。
+如需其它编码，请自行替换字典文件`wubi_dict.txt`。
 
 
 ## 介绍
@@ -39,9 +39,8 @@
 
       int main() {
         //system("chcp 65001");
-        //windows下中文显示乱码解决方案
 
-        WubiConvert wubi; // 实例化 WubiConvert 对象
+        WubiConvert wubi("wubi86.dict.txt"); // 实例化 WubiConvert 对象
         string inputText = "你好，世界！";
         cout << "输入的文本：" << inputText << endl;
 
@@ -52,7 +51,7 @@
           for (auto &wubi_text : text) {
             cout << wubi_text << " ";
           }
-          cout << " | ";
+          cout << " , ";
         }
         cout << endl;
 
@@ -72,17 +71,28 @@
         return 0;
       }
 
+
 ### 输出结果
       输入的文本：你好，世界！
       调用 convert_multi 函数:
-      wqiy wqi wq  | vbg vb  | ，  | anv an  | lwjj lwj  | ！  |
+      wqiy wqi wq  , vbg vb  , ，  , anv an  , lwjj lwj  , ！  ,
       调用 convert 函数转换文本:
       wval
       调用 phrase_segment 函数分词:
       你 好 ， 世 界 ！
     
 
-
+## 其它编码
+请修改字典文件`wubi_dict.txt`
+格式为:unicode编码\t汉字\t五笔码\n
+举例:
+```
+   0x20000	𠀀	ghab
+   0x20001	𠀁	gnv
+   0x20002	𠀂	gnb
+   0x20003	𠀃	mgd
+   0x20004	𠀄	bgd
+```
 ## 关于
 
 * GitHub: [https://github.com/lam126/wubi-convert-cpp](https://github.com/lam126/wubi-convert-cpp)
